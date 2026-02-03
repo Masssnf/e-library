@@ -9,7 +9,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Icon Library (Gunakan CDN JSDelivr) -->
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
@@ -23,38 +24,46 @@
             </div>
 
             <nav class="flex-1 px-2 py-4 space-y-2">
+                <!-- Dashboard -->
                 <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md">
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i> Dashboard
                 </a>
 
-                <a href="#"
-                    class="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition">
+                <!-- Data Buku (Placeholder) -->
+                <a href="{{ route('admin.buku.index') }}"
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.books.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="book" class="w-5 h-5 mr-3"></i> Data Buku
                 </a>
 
+                <!-- Data User (Placeholder) -->
                 <a href="#"
-                    class="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition">
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.users.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="user-check" class="w-5 h-5 mr-3"></i> Data User
                 </a>
 
-                <a href="#"
-                    class="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition">
+                <!-- Data Anggota (SUDAH AKTIF) -->
+                <!-- Menggunakan routeIs('admin.anggota.*') agar tetap aktif saat Create/Edit -->
+                <a href="{{ route('admin.anggota.index') }}"
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.anggota.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="users" class="w-5 h-5 mr-3"></i> Data Anggota
                 </a>
 
+                <!-- Data Peminjaman -->
                 <a href="#"
-                    class="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition">
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.peminjaman.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="repeat" class="w-5 h-5 mr-3"></i> Data Peminjaman
                 </a>
 
+                <!-- Data Kehilangan -->
                 <a href="#"
-                    class="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition">
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.kehilangan.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="alert-circle" class="w-5 h-5 mr-3"></i> Data Kehilangan
                 </a>
 
+                <!-- Data Laporan -->
                 <a href="#"
-                    class="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition">
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.laporan.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="file-text" class="w-5 h-5 mr-3"></i> Data Laporan
                 </a>
             </nav>

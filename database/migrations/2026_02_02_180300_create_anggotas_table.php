@@ -11,8 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('anggotas', function (Blueprint $table) {
+        // Sesuaikan nama tabel di sini
+        Schema::create('dataanggota', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_anggota')->unique();
+            $table->string('nama_anggota');
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->string('alamat');
+            $table->string('no_telepon');
+            $table->enum('jenis_anggota', ['Dosen', 'Mahasiswa']);
             $table->timestamps();
         });
     }
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('anggotas');
+        Schema::dropIfExists('dataanggota');
     }
 };

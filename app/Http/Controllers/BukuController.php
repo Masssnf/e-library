@@ -10,10 +10,53 @@ class BukuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bukus = Buku::latest()->paginate(10);
+        // 1. Mulai Query
+        $query = Buku::query();
+
+        // 2. Filter Pencarian (Search) - Judul, Pengarang, Penerbit, Kode
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                    ->orWhere('pengarang', 'like', "%{$search}%")
+                    ->orWhere('penerbit', 'like', "%{$search}%")
+                    ->orWhere('kode_buku', 'like', "%{$search}%");
+            });
+        }
+
+        // 3. Filter Jenis Buku
+        if ($request->filled('jenis_buku')) {
+            $query->where('jenis_buku', $request->jenis_buku);
+        }
+
+        // 4. Filter Status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // 5. Sorting (Pengurutan)
+        if ($request->sort == 'judul_asc') {
+            $query->orderBy('judul', 'asc');
+        } elseif ($request->sort == 'judul_desc') {
+            $query->orderBy('judul', 'desc');
+        } elseif ($request->sort == 'tahun_asc') {
+            $query->orderBy('tahun_terbit', 'asc');
+        } elseif ($request->sort == 'tahun_desc') {
+            $query->orderBy('tahun_terbit', 'desc');
+        } elseif ($request->sort == 'stok_asc') {
+            $query->orderBy('stok', 'asc');
+        } elseif ($request->sort == 'stok_desc') {
+            $query->orderBy('stok', 'desc');
+        } else {
+            $query->latest(); // Default: Terbaru
+        }
+
+        // 6. Eksekusi & Pagination
+        $bukus = $query->paginate(10)->appends($request->all());
         $totalBuku = Buku::count();
+
         return view('admin.buku.index', compact('bukus', 'totalBuku'));
     }
 
@@ -36,6 +79,7 @@ class BukuController extends Controller
             'pengarang' => 'required|string',
             'penerbit' => 'required|string',
             'tahun_terbit' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
+            'stok' => 'required|integer|min:0',
             'jenis_buku' => 'required|in:Fiksi,Non-Fiksi,Pelajaran,Referensi,Jurnal,Majalah',
         ]);
 
@@ -83,6 +127,7 @@ class BukuController extends Controller
             'penerbit' => 'required|string',
             'tahun_terbit' => 'required|digits:4',
             'jenis_buku' => 'required|in:Fiksi,Non-Fiksi,Pelajaran,Referensi,Jurnal,Majalah',
+            'stok' => 'required|integer|min:0',
             'status' => 'required|in:Tersedia,Dipinjam,Hilang,Rusak',
         ]);
 

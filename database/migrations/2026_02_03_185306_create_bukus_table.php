@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('judul');
             $table->string('pengarang');
             $table->string('penerbit');
+            $table->integer('stok');
             $table->year('tahun_terbit');
             
             // Tambahan "Jenis-Jenis Buku" sesuai permintaan

@@ -10,14 +10,36 @@ class AnggotaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index( Request $request)
     {
-        // Mengambil data terbaru dengan pagination 10 per halaman
-        $anggotas = Anggota::latest()->paginate(10);
+        // 1. Mulai query
+        $query = Anggota::query();
+
+        // 2. Filter Pencarian (Search)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_anggota', 'like', "%{$search}%")
+                    ->orWhere('kode_anggota', 'like', "%{$search}%");
+            });
+        }
+
+        // 3. Filter Pengurutan (Sorting)
+        if ($request->sort == 'kode_asc') {
+            $query->orderBy('kode_anggota', 'asc');
+        } elseif ($request->sort == 'kode_desc') {
+            $query->orderBy('kode_anggota', 'desc');
+        } else {
+            // Default: Data terbaru di atas
+            $query->latest();
+        }
+
+        // 4. Pagination (appends agar parameter search/sort tidak hilang saat pindah halaman)
+        $anggotas = $query->paginate(10)->appends($request->all());
 
         $totalAnggota = Anggota::count();
 
-        return view('admin.anggota.index', compact('anggotas','totalAnggota'));
+        return view('admin.anggota.index', compact('anggotas', 'totalAnggota'));
     }
 
     /**
@@ -39,13 +61,13 @@ class AnggotaController extends Controller
         // 1. Validasi
         $request->validate([
             // Kembalikan validasi required & unique karena data dikirim dari form
-            'kode_anggota' => 'required|unique:dataanggota,kode_anggota', 
+            'kode_anggota' => 'required|unique:dataanggota,kode_anggota',
             'nama_anggota' => 'required|string|max:255',
             'tempat_lahir' => 'required|string',
             'tanggal_lahir' => 'required|date',
             'alamat'       => 'required|string',
             'no_telepon'   => 'required|string|max:15',
-            'jenis_anggota'=> 'required|in:Karyawan,Dosen,Mahasiswa',
+            'jenis_anggota' => 'required|in:Karyawan,Dosen,Mahasiswa',
         ]);
 
         // 2. Simpan data (Langsung gunakan $request->all() karena kode_anggota sudah termasuk)

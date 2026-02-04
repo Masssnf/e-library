@@ -87,6 +87,14 @@
                         placeholder="YYYY" min="1900" max="{{ date('Y') + 1 }}" required>
                 </div>
 
+                <!-- Stok Buku (Tambahan) -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Stok Buku</label>
+                    <input type="number" name="stok"
+                        class="w-full border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 py-2.5"
+                        placeholder="0" min="0" required>
+                </div>
+
             </div>
 
             <div class="mt-8 flex justify-end space-x-4 border-t border-gray-100 pt-6">

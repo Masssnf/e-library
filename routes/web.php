@@ -4,7 +4,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +26,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [AdminController::class, 'users']);
     Route::resource('anggota', AnggotaController::class);
     Route::resource('buku', BukuController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('peminjaman', PeminjamanController::class)->except(['edit', 'update', 'destroy']);
+    
+    // Route khusus untuk tombol "Selesai/Kembali"
+    Route::patch('/peminjaman/{id}/complete', [PeminjamanController::class, 'complete'])->name('peminjaman.complete');
 });
 
 

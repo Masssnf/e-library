@@ -21,7 +21,7 @@
                 </div>
                 <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Buku</span>
             </div>
-            <h3 class="text-3xl font-bold text-gray-800">1,240</h3>
+            <h3 class="text-3xl font-bold text-gray-800">{{ $totalBuku }}</h3>
             <p class="text-sm text-green-500 mt-2 flex items-center">
                 <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i> +5% bulan ini
             </p>
@@ -49,7 +49,7 @@
                 </div>
                 <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Dipinjam</span>
             </div>
-            <h3 class="text-3xl font-bold text-gray-800">42</h3>
+            <h3 class="text-3xl font-bold text-gray-800">{{ $sedangDipinjam }}</h3>
             <p class="text-sm text-gray-500 mt-2">Sedang berlangsung</p>
         </div>
 

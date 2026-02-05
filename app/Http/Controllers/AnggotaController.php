@@ -67,7 +67,7 @@ class AnggotaController extends Controller
             'tanggal_lahir' => 'required|date',
             'alamat'       => 'required|string',
             'no_telepon'   => 'required|string|max:15',
-            'jenis_anggota' => 'required|in:Karyawan,Dosen,Mahasiswa',
+            'jenis_anggota' => 'required|in:Dosen,Mahasiswa',
         ]);
 
         // 2. Simpan data (Langsung gunakan $request->all() karena kode_anggota sudah termasuk)
@@ -109,7 +109,7 @@ class AnggotaController extends Controller
             'tanggal_lahir' => 'required|date',
             'alamat'       => 'required|string',
             'no_telepon'   => 'required|string|max:15',
-            'jenis_anggota' => 'required|in:Karyawan,Dosen,Mahasiswa',
+            'jenis_anggota' => 'required|in:Dosen,Mahasiswa',
         ]);
 
         $anggota->update($request->all());

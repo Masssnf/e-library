@@ -22,6 +22,11 @@ class Buku extends Model
         'status',
     ];
 
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'buku_id');
+    }
+
     /**
      * Fungsi Otomatis Kode Buku Berdasarkan Jenis
      * Contoh: Fiksi -> FS001, Pelajaran -> PD001

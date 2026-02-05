@@ -62,7 +62,6 @@
                         class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 py-2.5">
                         <option value="Mahasiswa">Mahasiswa</option>
                         <option value="Dosen">Dosen</option>
-                        <option value="Karyawan">Karyawan</option>
                     </select>
                 </div>
 

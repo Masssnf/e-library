@@ -23,6 +23,11 @@ class Anggota extends Model
         'jenis_anggota',
     ];
 
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'anggota_id');
+    }
+
     public static function createCode()
     {
         $latestCode = self::orderBy('kode_anggota', 'desc')->value('kode_anggota');

@@ -58,8 +58,6 @@
                         <option value="Mahasiswa" {{ $anggota->jenis_anggota == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa
                         </option>
                         <option value="Dosen" {{ $anggota->jenis_anggota == 'Dosen' ? 'selected' : '' }}>Dosen</option>
-                        <option value="Karyawan" {{ $anggota->jenis_anggota == 'Karyawan' ? 'selected' : '' }}>Karyawan
-                        </option>
                     </select>
                 </div>
 

@@ -5,7 +5,7 @@
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Manajemen Anggota</h2>
-            <p class="text-sm text-gray-500">Kelola data mahasiswa, dosen, dan karyawan.</p>
+            <p class="text-sm text-gray-500">Kelola data mahasiswa dan dosen.</p>
         </div>
 
         <!-- Widget Total Anggota -->
@@ -130,7 +130,6 @@
                                         $badgeClass = match ($anggota->jenis_anggota) {
                                             'Mahasiswa' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
                                             'Dosen' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                            'Karyawan' => 'bg-amber-100 text-amber-700 border-amber-200',
                                             default => 'bg-gray-100 text-gray-700'
                                         };
                                     @endphp

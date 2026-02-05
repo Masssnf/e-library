@@ -32,12 +32,12 @@
 
                 <!-- Data Buku (Placeholder) -->
                 <a href="{{ route('admin.buku.index') }}"
-                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.books.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.buku.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="book" class="w-5 h-5 mr-3"></i> Data Buku
                 </a>
 
                 <!-- Data User (Placeholder) -->
-                <a href="#"
+                <a href="{{ route('admin.users.index') }}"
                     class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.users.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="user-check" class="w-5 h-5 mr-3"></i> Data User
                 </a>
@@ -50,7 +50,7 @@
                 </a>
 
                 <!-- Data Peminjaman -->
-                <a href="#"
+                <a href="{{ route('admin.peminjaman.index') }}"
                     class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.peminjaman.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="repeat" class="w-5 h-5 mr-3"></i> Data Peminjaman
                 </a>

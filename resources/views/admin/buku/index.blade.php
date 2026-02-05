@@ -14,7 +14,7 @@
                 <i data-lucide="book" class="w-6 h-6 text-white"></i>
             </div>
             <div>
-                <p class="text-xs text-blue-100 uppercase font-semibold tracking-wider">Total Koleksi</p>
+                <p class="text-xs text-blue-100 uppercase font-semibold tracking-wider">Total Buku</p>
                 <p class="text-2xl font-bold">{{ $totalBuku }}</p>
             </div>
         </div>

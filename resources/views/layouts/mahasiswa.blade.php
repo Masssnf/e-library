@@ -7,10 +7,9 @@
     <title>E-Library Mahasiswa</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Icon Library (Gunakan CDN JSDelivr) -->
+    <!-- Icon Library -->
     <script
-        src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js">
-    </script>
+        src="[https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js](https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js)"></script>
 </head>
 
 <body class="bg-gray-50 font-sans antialiased">
@@ -24,40 +23,46 @@
                         <span class="text-xl font-bold text-emerald-600">E-Library MHS</span>
                     </div>
 
-                    <!-- MENU MAHASISWA -->
+                    <!-- MENU MAHASISWA (UPDATED) -->
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <!-- Daftar Buku (Aktif saat di Dashboard) -->
+                        <!-- Dashboard -->
                         <a href="{{ route('dashboard') }}"
-                            class="border-emerald-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Daftar Buku
+                            class="{{ request()->routeIs('dashboard') ? 'border-emerald-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Beranda
                         </a>
 
-                        <!-- Peminjaman -->
-                        <a href="#"
-                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Peminjaman
+                        <!-- Katalog Buku (NEW) -->
+                        <a href="{{ route('mahasiswa.buku.index') }}"
+                            class="{{ request()->routeIs('mahasiswa.buku.*') ? 'border-emerald-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Katalog Buku
                         </a>
 
-                        <!-- Pengembalian -->
-                        <a href="#"
-                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Pengembalian
+                        {{-- Kehilangan --}}
+                        <a href="{{ route('mahasiswa.kehilangan.create') }}"
+                            class="{{ request()->routeIs('mahasiswa.kehilangan.*') ? 'border-emerald-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Lapor Kehilangan
                         </a>
 
-                        <!-- Kehilangan -->
-                        <a href="#"
-                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Kehilangan
+                        <!-- Riwayat Peminjaman (NEW) -->
+                        <a href="{{ route('mahasiswa.peminjaman.index') }}"
+                            class="{{ request()->routeIs('mahasiswa.peminjaman.*') ? 'border-emerald-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Riwayat Peminjaman
                         </a>
                     </div>
                 </div>
 
                 <div class="flex items-center">
+                    <div class="flex items-center mr-4">
+                        <span class="text-sm text-gray-600 mr-2">{{ Auth::user()->name }}</span>
+                        <div
+                            class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                    </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
-                            class="text-gray-500 hover:text-red-600 font-medium text-sm">
-                            Logout</button>
+                            class="text-gray-500 hover:text-red-600 font-medium text-sm">Logout</button>
                     </form>
                 </div>
             </div>
@@ -66,12 +71,93 @@
 
     <!-- Konten Utama -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Alert Sukses Global -->
+        @if(session('success'))
+            <div class="mb-4 bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative"
+                role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <!-- Alert Error Global -->
+        @if(session('error'))
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
         @yield('content')
     </main>
 
-    <!-- Script untuk merender icon -->
     <script>
         lucide.createIcons();
+    </script>
+
+    <!-- CDN SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // 1. Menangani Pesan Sukses (Session)
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+
+        // 2. Menangani Pesan Error (Session)
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+            });
+        @endif
+
+            // 3. Menangani Error Validasi (Form Request)
+            // Ini akan muncul jika ada input yang tidak sesuai (misal: kosong, email ganda, dll)
+            @if($errors->any())
+                var errorMessages = "";
+                @foreach($errors->all() as $error)
+                    errorMessages += "<li>{{ $error }}</li>";
+                @endforeach
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Periksa Kembali Inputan',
+                    html: "<ul style='text-align: left; margin-left: 20px;'>" + errorMessages + "</ul>",
+                });
+            @endif
+
+        // 4. Konfirmasi Delete Otomatis (Opsional)
+        // Mengubah semua tombol delete standar menjadi SweetAlert
+        document.querySelectorAll('form').forEach(form => {
+            // Cek jika form memiliki method DELETE
+            if (form.querySelector('input[name="_method"][value="DELETE"]')) {
+                form.addEventListener('submit', function (e) {
+                    var form = this;
+                    e.preventDefault(); // Cegah submit langsung
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data yang dihapus tidak dapat dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // Lanjutkan submit jika user klik Ya
+                        }
+                    });
+                });
+            }
+        });
     </script>
 </body>
 

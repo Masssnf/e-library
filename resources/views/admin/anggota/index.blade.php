@@ -5,7 +5,7 @@
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Manajemen Anggota</h2>
-            <p class="text-sm text-gray-500">Kelola data mahasiswa dan dosen.</p>
+            <p class="text-sm text-gray-500">Kelola data mahasiswa, dosen, dan karyawan.</p>
         </div>
 
         <!-- Widget Total Anggota -->
@@ -48,19 +48,13 @@
                         </span>
                         <select name="sort" onchange="this.form.submit()"
                             class="w-full pl-10 pr-8 py-2.5 rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm shadow-sm cursor-pointer">
-                            <option value="">Urutan Default (Terbaru)</option>
+                            <option value="">Urutan Default</option>
                             <option value="kode_asc" {{ request('sort') == 'kode_asc' ? 'selected' : '' }}>Kode (A-Z)</option>
                             <option value="kode_desc" {{ request('sort') == 'kode_desc' ? 'selected' : '' }}>Kode (Z-A)
                             </option>
                         </select>
                     </div>
                 </div>
-
-                <!-- Tombol Cari (Optional jika ingin enter saja) -->
-                <button type="submit"
-                    class="bg-white border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition shadow-sm text-sm font-medium">
-                    Cari
-                </button>
             </form>
 
             <!-- Tombol Tambah -->
@@ -88,8 +82,9 @@
                         <tr>
                             <th class="px-6 py-4 w-12 text-center">No</th>
                             <th class="px-6 py-4 w-32 text-center">Kode</th>
-                            <th class="px-6 py-4">Nama Anggota</th>
-                            <th class="px-6 py-4 text-center">Jenis Anggota</th>
+                            <th class="px-6 py-4">Nama</th>
+                            <th class="px-6 py-4">Email Akun</th> <!-- Kolom Email Baru -->
+                            <th class="px-6 py-4 text-center">Jenis</th>
                             <th class="px-6 py-4 text-center">Telepon</th>
                             <th class="px-6 py-4 text-center">Alamat</th>
                             <th class="px-6 py-4 text-center">Aksi</th>
@@ -124,12 +119,30 @@
                                     </div>
                                 </td>
 
+                                <!-- Email Akun (Kolom Baru) -->
+                                <td class="px-6 py-4">
+                                    @if($anggota->user)
+                                        <div
+                                            class="flex items-center text-emerald-700 bg-emerald-50 px-2 py-1.5 rounded-md w-fit text-xs font-medium border border-emerald-200">
+                                            <i data-lucide="mail" class="w-3 h-3 mr-1.5"></i>
+                                            {{ $anggota->user->email }}
+                                        </div>
+                                    @else
+                                        <span
+                                            class="text-xs text-orange-600 bg-orange-50 px-2 py-1.5 rounded-md border border-orange-200 flex items-center w-fit font-medium">
+                                            <i data-lucide="alert-circle" class="w-3 h-3 mr-1.5"></i>
+                                            Belum Taut Akun
+                                        </span>
+                                    @endif
+                                </td>
+
                                 <!-- Jenis Anggota -->
                                 <td class="px-6 py-4 text-center">
                                     @php
                                         $badgeClass = match ($anggota->jenis_anggota) {
                                             'Mahasiswa' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
                                             'Dosen' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                            'Karyawan' => 'bg-amber-100 text-amber-700 border-amber-200',
                                             default => 'bg-gray-100 text-gray-700'
                                         };
                                     @endphp
@@ -139,7 +152,7 @@
                                 </td>
 
                                 <!-- Telepon -->
-                                <td class="px-6 py-4 text-center text-gray-600">
+                                <td class="px-6 py-4 text-center text-gray-600 text-sm">
                                     {{ $anggota->no_telepon }}
                                 </td>
 
@@ -171,7 +184,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-12 text-center">
+                                <td colspan="8" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center text-gray-400">
                                         <div class="bg-gray-50 p-4 rounded-full mb-3">
                                             <i data-lucide="search-x" class="w-8 h-8 text-gray-300"></i>

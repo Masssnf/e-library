@@ -4,7 +4,7 @@
     <!-- Welcome Banner -->
     <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-8 mb-8 text-white shadow-lg relative overflow-hidden">
         <div class="relative z-10">
-            <h2 class="text-3xl font-bold mb-2">Selamat Datang, Admin!</h2>
+            <h2 class="text-3xl font-bold mb-2">Selamat Datang, Admin Slot!</h2>
             <p class="text-indigo-100">Berikut adalah ringkasan aktivitas perpustakaan hari ini.</p>
         </div>
         <!-- Dekorasi Circle Background -->

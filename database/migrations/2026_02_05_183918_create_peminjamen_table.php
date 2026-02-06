@@ -20,11 +20,11 @@ return new class extends Migration
             // Relasi ke tabel databuku
             $table->foreignId('buku_id')->constrained('databuku')->onDelete('cascade');
 
-            $table->date('tanggal_pinjam');
-            $table->date('tanggal_wajib_kembali'); // Deadline (Otomatis +7 hari)
+            $table->date('tanggal_pinjam')->nullable();
+            $table->date('tanggal_wajib_kembali')->nullable(); // Deadline (Otomatis +7 hari)
             $table->date('tanggal_pengembalian')->nullable(); // Diisi saat buku balik
 
-            $table->enum('status', ['Dipinjam', 'Dikembalikan', 'Telat'])->default('Dipinjam');
+            $table->enum('status', ['Menunggu Konfirmasi', 'Dipinjam', 'Dikembalikan', 'Telat', 'Ditolak'])->default('Menunggu Konfirmasi');
             $table->timestamps();
         });
     }

@@ -9,8 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Icon Library (Gunakan CDN JSDelivr) -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
@@ -56,13 +55,13 @@
                 </a>
 
                 <!-- Data Kehilangan -->
-                <a href="#"
+                <a href="{{ route('admin.kehilangan.index') }}"
                     class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.kehilangan.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="alert-circle" class="w-5 h-5 mr-3"></i> Data Kehilangan
                 </a>
 
                 <!-- Data Laporan -->
-                <a href="#"
+                <a href="{{ route('admin.laporan.index') }}"
                     class="flex items-center px-4 py-2 rounded-md transition {{ request()->routeIs('admin.laporan.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i data-lucide="file-text" class="w-5 h-5 mr-3"></i> Data Laporan
                 </a>
@@ -90,6 +89,73 @@
     <!-- Script untuk merender icon -->
     <script>
         lucide.createIcons();
+    </script>
+
+    <!-- CDN SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // 1. Menangani Pesan Sukses (Session)
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+
+        // 2. Menangani Pesan Error (Session)
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+            });
+        @endif
+
+            // 3. Menangani Error Validasi (Form Request)
+            // Ini akan muncul jika ada input yang tidak sesuai (misal: kosong, email ganda, dll)
+            @if($errors->any())
+                var errorMessages = "";
+                @foreach($errors->all() as $error)
+                    errorMessages += "<li>{{ $error }}</li>";
+                @endforeach
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Periksa Kembali Inputan',
+                    html: "<ul style='text-align: left; margin-left: 20px;'>" + errorMessages + "</ul>",
+                });
+            @endif
+
+        // 4. Konfirmasi Delete Otomatis (Opsional)
+        // Mengubah semua tombol delete standar menjadi SweetAlert
+        document.querySelectorAll('form').forEach(form => {
+            // Cek jika form memiliki method DELETE
+            if (form.querySelector('input[name="_method"][value="DELETE"]')) {
+                form.addEventListener('submit', function (e) {
+                    var form = this;
+                    e.preventDefault(); // Cegah submit langsung
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data yang dihapus tidak dapat dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // Lanjutkan submit jika user klik Ya
+                        }
+                    });
+                });
+            }
+        });
     </script>
 </body>
 

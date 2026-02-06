@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anggota;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AnggotaController extends Controller
@@ -10,7 +11,7 @@ class AnggotaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index( Request $request)
+    public function index(Request $request)
     {
         // 1. Mulai query
         $query = Anggota::query();
@@ -50,7 +51,11 @@ class AnggotaController extends Controller
         // kode anggota otomatis
         $kode_anggota = Anggota::createCode();
 
-        return view('admin.anggota.create', compact('kode_anggota'));
+        $users = User::whereIn('role', ['mahasiswa', 'dosen'])
+            ->whereDoesntHave('anggota')
+            ->get();
+
+        return view('admin.anggota.create', compact('kode_anggota', 'users'));
     }
 
     /**
@@ -58,19 +63,17 @@ class AnggotaController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi
         $request->validate([
-            // Kembalikan validasi required & unique karena data dikirim dari form
+            'user_id' => 'nullable|exists:users,id|unique:dataanggota,user_id', // Validasi baru
             'kode_anggota' => 'required|unique:dataanggota,kode_anggota',
             'nama_anggota' => 'required|string|max:255',
             'tempat_lahir' => 'required|string',
             'tanggal_lahir' => 'required|date',
             'alamat'       => 'required|string',
             'no_telepon'   => 'required|string|max:15',
-            'jenis_anggota' => 'required|in:Dosen,Mahasiswa',
+            'jenis_anggota' => 'required|in:Karyawan,Dosen,Mahasiswa',
         ]);
 
-        // 2. Simpan data (Langsung gunakan $request->all() karena kode_anggota sudah termasuk)
         Anggota::create($request->all());
 
         return redirect()->route('admin.anggota.index')
@@ -91,7 +94,14 @@ class AnggotaController extends Controller
     public function edit(string $id)
     {
         $anggota = Anggota::findOrFail($id);
-        return view('admin.anggota.edit', compact('anggota'));
+
+        // Ambil user yang belum punya anggota ATAU user milik anggota ini sendiri
+        $users = User::whereIn('role', ['mahasiswa', 'dosen'])
+            ->whereDoesntHave('anggota')
+            ->orWhere('id', $anggota->user_id)
+            ->get();
+
+        return view('admin.anggota.edit', compact('anggota', 'users'));
     }
 
     /**
@@ -102,14 +112,14 @@ class AnggotaController extends Controller
         $anggota = Anggota::findOrFail($id);
 
         $request->validate([
-            // Unique tapi abaikan ID saat ini
+            'user_id' => 'nullable|exists:users,id|unique:dataanggota,user_id,' . $id, // Ignore ID saat ini
             'kode_anggota' => 'required|unique:dataanggota,kode_anggota,' . $anggota->id,
             'nama_anggota' => 'required|string|max:255',
             'tempat_lahir' => 'required|string',
             'tanggal_lahir' => 'required|date',
             'alamat'       => 'required|string',
             'no_telepon'   => 'required|string|max:15',
-            'jenis_anggota' => 'required|in:Dosen,Mahasiswa',
+            'jenis_anggota' => 'required|in:Karyawan,Dosen,Mahasiswa',
         ]);
 
         $anggota->update($request->all());

@@ -23,12 +23,12 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        // User Mahasiswa
-        \App\Models\User::factory()->create([
-            'name' => 'Budi Santoso',
-            'email' => 'budi@mhs.com',
-            'role' => 'mahasiswa',
-            'password' => bcrypt('password'),
-        ]);;
+        // // User Mahasiswa
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Budi Santoso',
+        //     'email' => 'budi@mhs.com',
+        //     'role' => 'mahasiswa',
+        //     'password' => bcrypt('password'),
+        // ]);;
     }
 }

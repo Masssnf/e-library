@@ -158,4 +158,42 @@ class PeminjamanController extends Controller
     {
         //
     }
+
+    // Method untuk Menyetujui Pengajuan
+    public function approve($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        if ($peminjaman->status !== 'Menunggu Konfirmasi') {
+            return back()->with('error', 'Status transaksi tidak valid.');
+        }
+
+        // Set Tanggal Pinjam = HARI INI
+        // Set Jatuh Tempo = HARI INI + 7
+        $peminjaman->update([
+            'status' => 'Dipinjam',
+            'tanggal_pinjam' => Carbon::now(),
+            'tanggal_wajib_kembali' => Carbon::now()->addDays(7),
+        ]);
+
+        return back()->with('success', 'Peminjaman disetujui. Waktu hitung mundur dimulai.');
+    }
+
+    // Method untuk Menolak Pengajuan
+    public function reject($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        if ($peminjaman->status !== 'Menunggu Konfirmasi') {
+            return back()->with('error', 'Status transaksi tidak valid.');
+        }
+
+        // Kembalikan Stok Buku
+        $peminjaman->buku->increment('stok');
+
+        // Ubah status jadi Ditolak (atau bisa di-delete permanen)
+        $peminjaman->update(['status' => 'Ditolak']);
+
+        return back()->with('success', 'Pengajuan ditolak. Stok buku dikembalikan.');
+    }
 }

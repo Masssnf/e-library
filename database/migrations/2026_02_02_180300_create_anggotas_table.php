@@ -14,6 +14,7 @@ return new class extends Migration
         // Sesuaikan nama tabel di sini
         Schema::create('dataanggota', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('kode_anggota')->unique();
             $table->string('nama_anggota');
             $table->string('tempat_lahir');

@@ -21,9 +21,24 @@
                 <!-- Kode Anggota -->
                 <div class="col-span-2 md:col-span-1">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Kode Anggota</label>
-                    <input type="text" name="kode_anggota" value="{{ old('kode_anggota', $anggota->kode_anggota) }}" readonly
+                    <input type="text" name="kode_anggota" value="{{ old('kode_anggota', $anggota->kode_anggota) }}"
+                        readonly
                         class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 py-2.5"
                         required>
+                </div>
+
+                <!-- Akun Login (User) -->
+                <div class="col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tautkan Akun Login (User)</label>
+                    <select name="user_id"
+                        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 py-2.5">
+                        <option value="">-- Tanpa Akun (Manual) --</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ $anggota->user_id == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }} ({{ $user->email }} - {{ ucfirst($user->role) }})
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <!-- Nama Anggota -->

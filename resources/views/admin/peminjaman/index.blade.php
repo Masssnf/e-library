@@ -88,7 +88,6 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($peminjamans as $item)
                         <tr class="hover:bg-gray-50 transition">
-                            <!-- Kode Peminjaman -->
                             <td class="px-6 py-4 text-center">
                                 <span
                                     class="font-mono text-xs font-bold bg-indigo-50 text-indigo-600 px-2 py-1 rounded border border-indigo-100">
@@ -104,53 +103,83 @@
                                 <div class="text-xs text-gray-500">{{ $item->buku->kode_buku }}</div>
                             </td>
                             <td class="px-6 py-4 text-center text-gray-600">
-                                {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d M Y') }}
+                                @if($item->tanggal_pinjam)
+                                    {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d M Y') }}
+                                @else
+                                    <span class="text-gray-400 text-xs">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-center text-red-600 font-medium">
-                                {{ \Carbon\Carbon::parse($item->tanggal_wajib_kembali)->format('d M Y') }}
+                                @if($item->tanggal_wajib_kembali)
+                                    {{ \Carbon\Carbon::parse($item->tanggal_wajib_kembali)->format('d M Y') }}
+                                @else
+                                    <span class="text-gray-400 text-xs">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @if($item->status == 'Dipinjam')
+                                @if($item->status == 'Menunggu Konfirmasi')
+                                    <span
+                                        class="bg-gray-100 text-gray-600 text-xs px-2.5 py-0.5 rounded-full border border-gray-200 font-medium">Menunggu</span>
+                                @elseif($item->status == 'Dipinjam')
                                     <span
                                         class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-0.5 rounded-full border border-yellow-200 font-medium">Dipinjam</span>
                                 @elseif($item->status == 'Dikembalikan')
                                     <span
                                         class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full border border-emerald-200 font-medium">Dikembalikan</span>
+                                @elseif($item->status == 'Ditolak')
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs px-2.5 py-0.5 rounded-full border border-red-200 font-medium">Ditolak</span>
                                 @else
                                     <span
                                         class="bg-red-100 text-red-800 text-xs px-2.5 py-0.5 rounded-full border border-red-200 font-medium">{{ $item->status }}</span>
                                 @endif
                             </td>
+
+                            <!-- KOLOM AKSI (UPDATE DI SINI) -->
                             <td class="px-6 py-4 text-center">
-                                @if($item->status == 'Dipinjam')
+                                @if($item->status == 'Menunggu Konfirmasi')
+                                    <div class="flex justify-center space-x-2">
+                                        <!-- Tombol Setuju -->
+                                        <form action="{{ route('admin.peminjaman.approve', $item->id) }}" method="POST">
+                                            @csrf @method('PATCH')
+                                            <button type="submit"
+                                                class="bg-emerald-100 text-emerald-700 p-1.5 rounded hover:bg-emerald-200 transition"
+                                                title="Setujui">
+                                                <i data-lucide="check" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
+                                        <!-- Tombol Tolak -->
+                                        <form action="{{ route('admin.peminjaman.reject', $item->id) }}" method="POST"
+                                            onsubmit="return confirm('Tolak pengajuan ini?');">
+                                            @csrf @method('PATCH')
+                                            <button type="submit"
+                                                class="bg-red-100 text-red-700 p-1.5 rounded hover:bg-red-200 transition"
+                                                title="Tolak">
+                                                <i data-lucide="x" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @elseif($item->status == 'Dipinjam')
+                                    <!-- Tombol Selesai -->
                                     <form action="{{ route('admin.peminjaman.complete', $item->id) }}" method="POST"
                                         onsubmit="return confirm('Buku dikembalikan? Stok akan bertambah.');">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit"
-                                            class="bg-white border border-emerald-500 text-emerald-600 px-3 py-1.5 rounded text-xs hover:bg-emerald-50 transition flex items-center mx-auto shadow-sm"
+                                        @csrf @method('PATCH')
+                                        <button
+                                            class="bg-white border border-emerald-500 text-emerald-600 px-3 py-1 rounded text-xs hover:bg-emerald-50 transition flex items-center mx-auto shadow-sm"
                                             title="Tandai Selesai">
                                             <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i> Selesai
                                         </button>
                                     </form>
                                 @else
                                     <span class="text-gray-400 text-xs italic flex justify-center items-center">
-                                        <i data-lucide="check" class="w-3 h-3 mr-1"></i> Selesai
+                                        <i data-lucide="minus" class="w-3 h-3 mr-1"></i>
                                     </span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                <div class="flex flex-col items-center justify-center">
-                                    <div class="bg-gray-50 p-4 rounded-full mb-3">
-                                        <i data-lucide="search-x" class="w-8 h-8 text-gray-300"></i>
-                                    </div>
-                                    <p class="text-base font-medium text-gray-500">Data tidak ditemukan.</p>
-                                    <p class="text-sm">Silakan buat transaksi baru atau ubah pencarian.</p>
-                                </div>
-                            </td>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">Belum ada transaksi peminjaman.</td>
                         </tr>
                     @endforelse
                 </tbody>

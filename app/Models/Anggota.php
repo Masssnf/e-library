@@ -14,6 +14,7 @@ class Anggota extends Model
 
     // Kolom yang boleh diisi (Mass Assignment)
     protected $fillable = [
+        'user_id',
         'kode_anggota',
         'nama_anggota',
         'tempat_lahir',
@@ -28,6 +29,11 @@ class Anggota extends Model
         return $this->hasMany(Peminjaman::class, 'anggota_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    
     public static function createCode()
     {
         $latestCode = self::orderBy('kode_anggota', 'desc')->value('kode_anggota');
